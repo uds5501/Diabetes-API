@@ -2,7 +2,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import (classification_report, confusion_matrix)
 import pandas as pd
 import numpy as np
-
+import random
 
 
 
@@ -28,8 +28,10 @@ def ModelGenerator():
 
     df_train = pd.concat([df_train, pd.get_dummies(df_train['BMICat'])], axis = 1)
 
-    df_train = df_train.drop(columns=['BMICat'], axis = 1)
+            
 
+    df_train = df_train.drop(columns=['BMICat'], axis = 1)
+    # print(df_train.columns.values)
     # X,y
     data_in = df_train
     data_out = df_diabetes['Outcome']
@@ -53,17 +55,49 @@ def PreProcess(InputDict):
                      }
 
     '''
-    df_train = pd.DataFrame(InputDict)
+
+    print("\n Inserted Information : ", InputDict)
+
+    df_train = pd.DataFrame(InputDict, index = range(1))
     df_train['BMICat'] = df_train['BMI'].apply(pre_process_BMI_category)
+    #print(df_train.head())
     df_train = pd.concat([df_train, pd.get_dummies(df_train['BMICat'])], axis = 1)
     df_train = df_train.drop(columns=['BMICat'], axis = 1)
 
-    toTrain = ourModel()
+    #print(df_train.head())
 
-    prediction = ourModel.predict(df_train)
-    prediction_probs = ourModel.prediction_probs(df_train)
-    return {"prediction" : prediction, "pred_0" : prediction_probs[0] * 100, "pred_1" : prediction_probs[1] * 100}
+    required = ["VSUW", "UW", "NORMAL", "OW", "OBESE"]
+    for i in required:
+        if i not in df_train.columns.values:
+            df_train[i] = pd.Series(data = 0, index = df_train.index)
+    
+    #print ("Input Columns" , df_train.columns.values)
+
+    toTrain = ModelGenerator()
+
+    prediction = toTrain.predict(df_train)
+    prediction_probs = toTrain.predict_proba(df_train)
+    #print("\n", prediction_probs)
+    #print("\n", prediction)
+    return {"prediction" : prediction[0], "probablity_class_0" : prediction_probs[0][0], "probablity_class_1" : prediction_probs[0][1]}
     
 
 #x = ModelGenerator()
 #print(x.feature_importances_)
+
+if __name__ == "__main__":
+    print("\n\n***** Model Generation testing *****")
+    print(ModelGenerator())
+    
+    print("\n\n***** Prediction Tests *****")
+
+    print("\n Output:",PreProcess({"Pregnancies" : random.randint(0, 9) ,
+                     "Glucose" : random.randint(100, 200), 
+                     "BloodPressure" : random.randint(30, 70),
+                     "SkinThickness" : random.randint(20, 30),
+                     "Insulin" : random.choice([0, random.randint(65,85)]), 
+                     "BMI" : random.randint(25, 50),
+                     'DiabetesPedigreeFunction':random.random() * random.randint(1,3),
+                     "Age":random.randint(25, 60) 
+                     }))
+
