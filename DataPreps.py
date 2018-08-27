@@ -5,6 +5,7 @@ import numpy as np
 
 
 def ModelGenerator(data_in, data_out):
+    df = pd.read_csv('../')
     ourModel = GradientBoostingClassifier(learning_rate=0.001, n_estimators=1000)
     ourModel.fit(data_in, data_out)
 
@@ -26,5 +27,21 @@ def pre_process_BMI_category(bmi):
 
 # Lets assume that data enters in JSON dict form
 def PreProcess(InputDict):
-    inputdf = 
+    '''
+    input format : {"Pregnancies" : 4 ,
+                     "Glucose" : 148, 
+                     "BloodPressure" : 55,
+                     "SkinThickness" : 66,
+                     "Insulin" : 1, 
+                     "BMI" : ,
+                     "Diabetes Pedigree Funtion :,
+                     "Age": 
+                     }
+
+    '''
+    df_train = pd.DataFrame(InputDict)
+    df_train['BMICat'] = df_train['BMI'].apply(pre_process_BMI_category)
+    df_train = pd.concat([df_train, pd.get_dummies(df_train['BMICat'])], axis = 1)
+    df_train = df_train.drop(columns=['BMICat'], axis = 1)
+    
 
