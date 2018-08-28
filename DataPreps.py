@@ -66,7 +66,7 @@ def PreProcess(InputDict):
 
     #print(df_train.head())
 
-    required = ["VSUW", "UW", "NORMAL", "OW", "OBESE"]
+    required = ["VSUW", "UW", "NORMAL", "OW", "OBESE", "SUW"]
     for i in required:
         if i not in df_train.columns.values:
             df_train[i] = pd.Series(data = 0, index = df_train.index)
@@ -79,7 +79,7 @@ def PreProcess(InputDict):
     prediction_probs = toTrain.predict_proba(df_train)
     #print("\n", prediction_probs)
     #print("\n", prediction)
-    return {"prediction" : prediction[0], "probablity_class_0" : prediction_probs[0][0], "probablity_class_1" : prediction_probs[0][1]}
+    return {"prediction" : str(prediction[0]), "probablity_class_0" : str(prediction_probs[0][0]), "probablity_class_1" : str(prediction_probs[0][1])}
     
 
 #x = ModelGenerator()

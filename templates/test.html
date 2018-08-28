@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title> Test your diabates status!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    </head>
+
+    <body>
+        <div class = "container">
+            <h1> Please Enter your details</h1>
+            <br>
+            <form action = "{{ url_for('checkResult') }}" method="post">
+                Pregnancies : <input type = "number" placeholder="0" name = "Pregnancies"><br>
+                Glucose Level : <input type = "number" placeholder="110" name = "Glucose"><br>
+                Skin Thickness : <input type = "number" placeholder="23" name = "SkinThickness"><br>
+                Insulin taken : <input type = "text" placeholder="70" name = "Insulin"><br>
+                BMI : <input type = "text" placeholder="25" name = "BMI"><br>
+                Diabetes Pedigree Function : <input type = "text" placeholder="0.725" name = "DiabetesPedigreeFunction"><br>
+                Age : <input type = "number" placeholder="45" name = "Age">
+                <br><input type = "submit">
+            </form>
+        </div>
+    </body>
+</html>
